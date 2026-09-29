@@ -139,3 +139,8 @@ LaTeX may emit a `fancyhdr` `headheight` warning because the header keeps the or
 Template reference: ByteDance Seed.
 
 Images from: https://unsplash.com
+
+
+## Chinese and LuaLaTeX adaptation
+
+This fork adapts the template for Chinese papers compiled with LuaLaTeX. It configures SimSun for regular Chinese text, Douyin Sans for Chinese sans-serif text and Chinese bold text, Latin Modern for regular Western body text, and ByteSans for Western headings and bold text. The included `.texpile/config.json` uses LuaLaTeX for the project build.

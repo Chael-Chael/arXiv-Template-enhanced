@@ -5,7 +5,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{onethree}
 \LoadClassWithOptions{article}
-\pdfoutput=1
+\ifdefined\pdfoutput\pdfoutput=1\fi
 
 % Layout
 \RequirePackage[top=2.75cm, bottom=2.5cm, left=2.5cm, right=2.5cm, columnsep=0.65cm]{geometry}
@@ -14,12 +14,19 @@
 \RequirePackage{hyphenat}
 \RequirePackage{setspace}
 \RequirePackage{parskip}
-\RequirePackage[latin, english]{babel}
+\RequirePackage[english]{babel}
+\RequirePackage{silence}
+\WarningFilter{ctex}{Redefining CJKfamily}
+\WarningFilter{tocloft}{\\@starttoc has already been redefined}
+\WarningFilter{microtype}{One or more slots in the configuration are unknown}
+\RequirePackage[fontset=windows]{ctex}
+% Match the remote template's default article line spacing.
+\linespread{1}\selectfont
 \RequirePackage{lipsum}
 \RequirePackage{etoolbox}
 \RequirePackage{fancyhdr}  % custom headers/footers
 \RequirePackage{ulem}  % 引用下划线
-\DisableLigatures[f]{family=sf*}
+\ifdefined\XeTeXversion\else\DisableLigatures[f]{family=sf*}\fi
 \RequirePackage{graphicx}
 \RequirePackage{subcaption}
 
@@ -91,18 +98,25 @@
 \captionsetup[sub]{singlelinecheck=true,format=custom,labelsep=custom,font=small}
 
 
-\RequirePackage[T1]{fontenc}
-\DeclareFontFamily{T1}{bytesans}{}
-\DeclareFontShape{T1}{bytesans}{m}{n}{<-> s * [1] assets/bytesans}{}
-\pdfmapline{+bytesans < assets/ByteSans-Bold.ttf <T1-WGL4.enc}
-\renewcommand{\sfdefault}{bytesans}%
-
-
-\DeclareFontFamily{T1}{bytesansmedium}{}
-\DeclareFontShape{T1}{bytesansmedium}{m}{n}{<-> s*[1] assets/bytesansmedium}{}
-\pdfmapline{+bytesansmedium < assets/ByteSans-Medium.ttf <T1-WGL4.enc}
-%\renewcommand{\sfdefault}{bytesansmedium}%
-\renewcommand{\rmdefault}{cmr}
+\RequirePackage{iftex}
+\ifPDFTeX
+  \RequirePackage[T1]{fontenc}
+  \DeclareFontFamily{T1}{bytesans}{}
+  \DeclareFontShape{T1}{bytesans}{m}{n}{<-> s * [1] assets/bytesans}{}
+  \pdfmapline{+bytesans < assets/ByteSans-Bold.ttf <T1-WGL4.enc}
+  \renewcommand{\sfdefault}{bytesans}%
+  \DeclareFontFamily{T1}{bytesansmedium}{}
+  \DeclareFontShape{T1}{bytesansmedium}{m}{n}{<-> s*[1] assets/bytesansmedium}{}
+  \pdfmapline{+bytesansmedium < assets/ByteSans-Medium.ttf <T1-WGL4.enc}
+  \renewcommand{\rmdefault}{cmr}
+\else
+  \RequirePackage{fontspec}
+  \setCJKsansfont{DouyinSansBold.ttf}[Path=assets/,BoldFont=DouyinSansBold.ttf]
+  \setCJKmainfont{SimSun}[BoldFont=DouyinSansBold.ttf,BoldFeatures={Path=assets/}]
+  \setmainfont{Latin Modern Roman}
+  \setsansfont{ByteSans-Medium.ttf}[Path=assets/,BoldFont=ByteSans-Bold.ttf]
+  \newfontfamily\onethreemedium{ByteSans-Medium.ttf}[Path=assets/]
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -120,7 +134,7 @@
 {\fontsize{10}{12}\selectfont}
 
 \newcommand\authorlist{}
-\newcommand\authorformat[2][]{\authorfont {\sffamily #2$^{#1}$}}
+\newcommand\authorformat[2][]{\authorfont {\sffamily\bfseries #2$^{#1}$}}
 \renewcommand\author[2][]{\addtolist[#1]{#2}{\authorlist}{\authorformat}{, }}
 
 %给affiliation换成medium字体
@@ -129,7 +143,7 @@
 {\fontsize{10}{12}\selectfont}
 
 \newcommand\affiliationlist{}
-\newcommand\affiliationformat[2][]{{\affiliationfont {\fontfamily{bytesansmedium}\selectfont $^{#1}$#2}}}
+\newcommand\affiliationformat[2][]{{\affiliationfont {\onethreemedium $^{#1}$#2}}}
 \newcommand\affiliation[2][]{\addtolist[#1]{#2}{\affiliationlist}{\affiliationformat}{, }}
 
 \newcommand{\contributionfont}
@@ -160,7 +174,7 @@
 \newcommand{\titlefont}
 {\fontsize{17}{20}\selectfont}
 
-\renewcommand{\title}[1]{\newcommand{\titlelist}{\titlefont{\sffamily #1}}}
+\renewcommand{\title}[1]{\newcommand{\titlelist}{\titlefont{\sffamily\bfseries #1}}}
 
 
 \newcommand{\abstractfont}
@@ -173,11 +187,11 @@
 
 \usepackage[subfigure]{tocloft}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % 目录后一行连续的点
-\renewcommand{\cftsecfont}{\sffamily}
+\renewcommand{\cftsecfont}{\sffamily\bfseries}
 %\renewcommand{\cftsubsecfont}{\sffamily\large}
-\renewcommand{\cftsecpagefont}{\sffamily}{\color{onethreeblue}}
+\renewcommand{\cftsecpagefont}{\sffamily\bfseries}{\color{onethreeblue}}
 \renewcommand{\cfttoctitlefont}
-{\sffamily\sectionfont\onethreeblue}
+{\sffamily\bfseries\sectionfont\onethreeblue}
 
 
 %%======== Header and Footer Content ========
@@ -310,3 +324,7 @@
   %\setlength{\parskip}{4mm}
 }%
 \fi
+
+
+
+
